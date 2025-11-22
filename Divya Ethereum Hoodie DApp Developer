@@ -103,3 +103,208 @@ contract HoodieStorage {
         return value;
     }
 }
+
+
+##code:
+
+html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Hoodie DApp</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Load ethers.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Ethereum Hoodie DApp</h2>
+        <p>Connect wallet • Store & read value from your contract</p>
+
+        <button id="connectBtn">Connect Wallet</button>
+
+        <p id="accountInfo">Not connected</p>
+        <p id="networkInfo"></p>
+
+        <div class="label">Set Value</div>
+        <input type="number" id="valueInput" placeholder="Enter a number">
+
+        <button id="setBtn">Store Value</button>
+
+        <p>Stored Value: <span id="storedValue">--</span></p>
+
+        <p id="status"></p>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+
+#style css
+
+body {
+  background: #0d1117;
+  color: white;
+  font-family: Arial;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+.card {
+  width: 350px;
+  padding: 25px;
+  background: #111827;
+  border-radius: 12px;
+  box-shadow: 0px 0px 20px #0007;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#connectBtn {
+  background: orange;
+  color: black;
+}
+
+#setBtn {
+  background: #1f2937;
+  color: white;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #0d1117;
+  color: white;
+}
+
+.label {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+#status {
+  margin-top: 10px;
+  color: #ffcc66;
+}
+
+#script jss
+// Contract address from Remix
+const CONTRACT_ADDRESS = "0x9C17c4e34F0B01c3eEc48C5F19fA36B9506063A0";
+
+const CONTRACT_ABI = [
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_value", "type": "uint256" }
+    ],
+    "name": "setValue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getValue",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
+
+const connectBtn = document.getElementById("connectBtn");
+const accountInfo = document.getElementById("accountInfo");
+const networkInfo = document.getElementById("networkInfo");
+const valueInput = document.getElementById("valueInput");
+const setBtn = document.getElementById("setBtn");
+const storedValueEl = document.getElementById("storedValue");
+const statusEl = document.getElementById("status");
+
+let provider;
+let signer;
+let contract;
+
+connectBtn.addEventListener("click", async () => {
+  if (!window.ethereum) {
+    alert("MetaMask not detected.");
+    return;
+  }
+
+  try {
+    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+    const network = await provider.getNetwork();
+
+    accountInfo.textContent = "Connected: " + accounts[0];
+    networkInfo.textContent = `Network: ${network.name} (Chain ID: ${network.chainId})`;
+
+    statusEl.textContent = "Loading stored value…";
+    await loadStoredValue();
+
+  } catch (error) {
+    console.error(error);
+    statusEl.textContent = "Connection failed.";
+  }
+});
+
+setBtn.addEventListener("click", async () => {
+  if (!contract) return alert("Connect wallet first!");
+
+  const value = valueInput.value.trim();
+  if (!value) return alert("Enter a number");
+
+  try {
+    statusEl.textContent = "Waiting for MetaMask…";
+    const tx = await contract.setValue(value);
+    await tx.wait();
+
+    statusEl.textContent = "Transaction confirmed ✓";
+    valueInput.value = "";
+    await loadStoredValue();
+
+  } catch (error) {
+    console.error(error);
+    statusEl.textContent = "Transaction failed.";
+  }
+});
+
+async function loadStoredValue() {
+  if (!contract) return;
+
+  try {
+    const value = await contract.getValue();
+    storedValueEl.textContent = value.toString();
+    statusEl.textContent = "Value loaded ✓";
+
+  } catch (error) {
+    console.error(error);
+    statusEl.textContent = "Failed to load value.";
+  }
+}
+
+
+
