@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Hoodie DApp</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Load ethers.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Ethereum Hoodie DApp</h2>
+        <p>Connect wallet • Store & read value from your contract</p>
+
+        <button id="connectBtn">Connect Wallet</button>
+
+        <p id="accountInfo">Not connected</p>
+        <p id="networkInfo"></p>
+
+        <div class="label">Set Value</div>
+        <input type="number" id="valueInput" placeholder="Enter a number">
+
+        <button id="setBtn">Store Value</button>
+
+        <p>Stored Value: <span id="storedValue">--</span></p>
+
+        <p id="status"></p>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
