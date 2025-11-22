@@ -1,4 +1,4 @@
-# 🧥 Ethereum Hoodie DApp  
+#  Ethereum Hoodie DApp  
 A simple decentralized application (DApp) that connects to MetaMask and interacts with a smart contract deployed on the **Ethereum Hoodie Network** (a custom local blockchain).
 
 This project demonstrates:
@@ -11,7 +11,7 @@ This project demonstrates:
 
 ---
 
-## 🚀 Features
+##  Features
 
 - Connect MetaMask wallet  
 - Retrieve stored value from contract  
@@ -22,7 +22,7 @@ This project demonstrates:
 
 ---
 
-## 🧱 Project Structure
+## Project Structure
 
 ethereum-hoodie-dapp/
 │── index.html # User interface
@@ -32,7 +32,7 @@ ethereum-hoodie-dapp/
 
 ---
 
-## 🔗 Requirements
+##  Requirements
 
 Before running the DApp, make sure you have:
 
@@ -43,7 +43,7 @@ Before running the DApp, make sure you have:
 
 ---
 
-## ⚙️ Setting Up "Ethereum Hoodie" Network
+##  Setting Up "Ethereum Hoodie" Network
 
 1. Open **MetaMask → Settings → Networks → Add Network**
 2. Enter:
@@ -64,7 +64,7 @@ You now have 100 HOOD tokens.
 
 ---
 
-## 📦 Deploy Smart Contract (Remix)
+##  Deploy Smart Contract (Remix)
 
 1. Open https://remix.ethereum.org  
 2. Set ENVIRONMENT → Injected Provider – MetaMask  
