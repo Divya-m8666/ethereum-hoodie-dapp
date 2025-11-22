@@ -1,0 +1,105 @@
+# 🧥 Ethereum Hoodie DApp  
+A simple decentralized application (DApp) that connects to MetaMask and interacts with a smart contract deployed on the **Ethereum Hoodie Network** (a custom local blockchain).
+
+This project demonstrates:
+
+- MetaMask wallet connection  
+- Reading and writing values from a smart contract  
+- Using ethers.js  
+- Deploying contracts on a custom RPC network  
+- Local blockchain setup with Ganache  
+
+---
+
+## 🚀 Features
+
+- Connect MetaMask wallet  
+- Retrieve stored value from contract  
+- Store new value into contract  
+- Runs on your custom network **"Ethereum Hoodie"**  
+- Clean UI built with HTML + CSS  
+- JavaScript interaction using ethers.js  
+
+---
+
+## 🧱 Project Structure
+
+ethereum-hoodie-dapp/
+│── index.html # User interface
+│── script.js # DApp logic (ethers.js)
+│── style.css # Styling
+
+
+---
+
+## 🔗 Requirements
+
+Before running the DApp, make sure you have:
+
+- MetaMask installed  
+- Ganache running (for "Ethereum Hoodie" private network)  
+- A deployed smart contract with ABI and contract address  
+- Contract address updated inside `script.js`  
+
+---
+
+## ⚙️ Setting Up "Ethereum Hoodie" Network
+
+1. Open **MetaMask → Settings → Networks → Add Network**
+2. Enter:
+
+Network Name: Ethereum Hoodie
+RPC URL: http://127.0.0.1:7545
+
+Chain ID: 1337
+Currency Symbol: HOOD
+
+Save network.
+
+3. Import Ganache account:
+   - Copy private key from Ganache
+   - Open MetaMask → Import Account → Paste key
+
+You now have 100 HOOD tokens.
+
+---
+
+## 📦 Deploy Smart Contract (Remix)
+
+1. Open https://remix.ethereum.org  
+2. Set ENVIRONMENT → Injected Provider – MetaMask  
+3. Make sure MetaMask is on **Ethereum Hoodie**  
+4. Deploy contract  
+5. Copy the contract address  
+6. Paste the address inside `script.js`:
+
+```javascript
+const CONTRACT_ADDRESS = "YOUR_CONTRACT_ADDRESS_HERE";
+Run the DApp
+
+Open the project folder in VS Code
+
+Right-click index.html
+
+Select Open With Live Server
+
+Website will open at:
+http://127.0.0.1:5500/dapp/index.html
+Click Connect Wallet
+
+You can now interact with your smart contract!
+
+Smart Contract (Example)
+pragma solidity ^0.8.0;
+
+contract HoodieStorage {
+    uint256 value;
+
+    function setValue(uint256 _value) public {
+        value = _value;
+    }
+
+    function getValue() public view returns (uint256) {
+        return value;
+    }
+}
