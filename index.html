@@ -1,39 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ethereum Hoodie DApp</title>
+  <meta charset="UTF-8" />
+  <title>CyberVault DApp</title>
 
-    <link rel="stylesheet" href="style.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap');
 
-    <!-- Load ethers.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Orbitron", sans-serif;
+      background: #0a0f0d;
+      color: #39ff14;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      width: 460px;
+      padding: 30px;
+      background: rgba(10, 15, 13, 0.8);
+      border: 2px solid #39ff14;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+      animation: glowPulse 2s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from { box-shadow: 0 0 12px rgba(57,255,20,0.4); }
+      to { box-shadow: 0 0 25px rgba(57,255,20,0.8); }
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #39ff14;
+    }
+
+    #networkStatus {
+      font-weight: bold;
+      color: #39ff14;
+    }
+
+    #currentMessage {
+      background: rgba(57, 255, 20, 0.05);
+      padding: 12px;
+      border-left: 4px solid #39ff14;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-size: 13px;
+      text-shadow: 0 0 5px #39ff14;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 2px solid #39ff14;
+      background: transparent;
+      color: #39ff14;
+      outline: none;
+      transition: 0.3s;
+      box-shadow: 0 0 8px rgba(57,255,20,0.3);
+    }
+
+    input:focus {
+      box-shadow: 0 0 14px rgba(57,255,20,0.8);
+      transform: translateY(-2px);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      font-size: 15px;
+      color: #0a0f0d;
+      background: #39ff14;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      box-shadow: 0 0 12px rgba(57,255,20,0.7);
+    }
+
+    button:hover {
+      background: #2fd30f;
+      transform: translateY(-3px);
+      box-shadow: 0 0 18px rgba(57,255,20,1);
+    }
+
+  </style>
 </head>
 
 <body>
 
-    <div class="card">
-        <h2>Ethereum Hoodie DApp</h2>
-        <p>Connect wallet • Store & read value from your contract</p>
+  <div class="card">
+    <h2>🟢 CyberVault DApp</h2>
 
-        <button id="connectBtn">Connect Wallet</button>
+    <p>Status: <span id="networkStatus">Scanning...</span></p>
 
-        <p id="accountInfo">Not connected</p>
-        <p id="networkInfo"></p>
+    <div id="currentMessage">🟢 No logs found. Click "Retrieve Logs".</div>
 
-        <div class="label">Set Value</div>
-        <input type="number" id="valueInput" placeholder="Enter a number">
+    <input type="text" id="messageInput" placeholder="Enter secure record...">
 
-        <button id="setBtn">Store Value</button>
+    <button id="setMessageBtn">💾 Upload Record</button>
+    <button id="getMessageBtn">📡 Retrieve Logs</button>
+  </div>
 
-        <p>Stored Value: <span id="storedValue">--</span></p>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 
-        <p id="status"></p>
-    </div>
+  <script>
+    const contractAddress = "0xDdABb651130A26d318c33e4938d65f5cAc31d055";
 
-    <script src="script.js"></script>
+    const abi = [
+      "function getAllMessages() view returns (string[] memory)",
+      "function getLatestMessage() view returns (string memory)",
+      "function setMessage(string _message)"
+    ];
+
+    async function checkWallet() {
+      if (!window.ethereum) {
+        document.getElementById("networkStatus").innerText = "❌ Wallet Not Detected";
+        return false;
+      }
+
+      try {
+        const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+        document.getElementById("networkStatus").innerText =
+          "Authorized: " + accounts[0].slice(0, 6) + "...";
+        return true;
+      } catch {
+        document.getElementById("networkStatus").innerText = "⛔ Access Blocked";
+        return false;
+      }
+    }
+
+    async function loadContract() {
+      await checkWallet();
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      return new ethers.Contract(contractAddress, abi, signer);
+    }
+
+    document.getElementById("getMessageBtn").onclick = async () => {
+      try {
+        const contract = await loadContract();
+        const msgs = await contract.getAllMessages();
+
+        document.getElementById("currentMessage").innerText =
+          "📁 Retrieved Logs: " + msgs.join(" | ");
+      } catch (err) {
+        alert("⚠ Error fetching logs: " + err.message);
+      }
+    };
+
+    document.getElementById("setMessageBtn").onclick = async () => {
+      const msg = document.getElementById("messageInput").value.trim();
+      if (!msg) return alert("⚠ Please enter a record!");
+
+      try {
+        const contract = await loadContract();
+        const tx = await contract.setMessage(msg);
+
+        alert("⏳ Uploading record...");
+        await tx.wait();
+        alert("✅ Record stored in CyberVault!");
+      } catch (err) {
+        alert("⚠ Upload failed: " + err.message);
+      }
+    };
+  </script>
 
 </body>
 </html>
