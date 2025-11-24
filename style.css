@@ -1,56 +1,65 @@
-body {
-  background: #0d1117;
-  color: white;
-  font-family: Arial;
+/* === Split Layout === */
+.app-layout {
   display: flex;
-  justify-content: center;
-  padding-top: 50px;
+  width: 850px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
-.card {
-  width: 350px;
-  padding: 25px;
-  background: #111827;
-  border-radius: 12px;
-  box-shadow: 0px 0px 20px #0007;
+/* === Sidebar === */
+.side-panel {
+  width: 40%;
+  padding: 2rem;
+  background: #f2f6ff;
+  border-right: 1px solid #cdd9ff;
 }
 
-button {
+.side-panel h2 {
+  color: #003399;
+  margin-bottom: 1rem;
+}
+
+/* Status Block */
+.status-block {
+  background: #fff;
+  border: 1px solid #cdd9ff;
+  padding: 0.7rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Input Box */
+.input-box input {
   width: 100%;
-  padding: 12px;
-  margin-top: 12px;
+  padding: 0.7rem;
+  border: 1px solid #ccd3ff;
   border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
 }
 
-#connectBtn {
-  background: orange;
-  color: black;
-}
-
-#setBtn {
-  background: #1f2937;
-  color: white;
-}
-
-input {
+/* Sidebar Buttons */
+.side-buttons button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
+  margin-top: 0.8rem;
+  padding: 0.6rem 1rem;
+}
+
+/* === Main Display === */
+.display-panel {
+  width: 60%;
+  padding: 2rem;
+}
+
+.display-panel h3 {
+  color: #003399;
+  margin-bottom: 1rem;
+}
+
+#currentMessage {
+  background: #f9f9ff;
+  border-left: 4px solid #004aad;
+  padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #333;
-  background: #0d1117;
-  color: white;
-}
-
-.label {
-  margin-top: 15px;
-  font-weight: bold;
-}
-
-#status {
-  margin-top: 10px;
-  color: #ffcc66;
+  font-size: 1rem;
 }
